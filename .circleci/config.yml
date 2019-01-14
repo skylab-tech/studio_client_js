@@ -1,0 +1,44 @@
+version: 2
+
+jobs:
+  test:
+    steps:
+      - checkout
+
+      # Restore bundle cache
+      - restore_cache:
+          keys:
+            - skylab-api-js-bundle-v1-{{ checksum "package-lock.json" }}
+            - skylab-api-js-bundle-v1-
+
+      - run:
+          name: Install application dependencies
+          command: |
+            npm i
+
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: skylab-api-js-bundle-v1-{{ checksum "package-lock.json" }}
+
+      # Lint
+      - run:
+          name: Lint
+          command: npm run lint
+
+      # Unit tests
+      - run:
+          name: Run unit tests
+          command: npm run test
+
+workflows:
+  version: 2
+
+  test:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore:
+                - staging
+                - production
