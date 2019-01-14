@@ -2,14 +2,16 @@ version: 2
 
 jobs:
   test:
+    - image: circleci/node:7.10
+
     steps:
       - checkout
 
-      # Restore bundle cache
+      # Restore cache
       - restore_cache:
           keys:
-            - skylab-api-js-bundle-v1-{{ checksum "package-lock.json" }}
-            - skylab-api-js-bundle-v1-
+            - skylab-api-js-v1-{{ checksum "package.json" }}
+            - skylab-api-js-v1-
 
       - run:
           name: Install application dependencies
@@ -19,7 +21,7 @@ jobs:
       - save_cache:
           paths:
             - ./node_modules
-          key: skylab-api-js-bundle-v1-{{ checksum "package-lock.json" }}
+          key: skylab-api-js-v1-{{ checksum "package.json" }}
 
       # Lint
       - run:
