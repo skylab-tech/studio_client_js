@@ -11,8 +11,8 @@ jobs:
       # Restore cache
       - restore_cache:
           keys:
-            - skylab-api-js-v1-{{ checksum "package.json" }}
-            - skylab-api-js-v1-
+            - skylab-core-client-js-v1-{{ checksum "package.json" }}
+            - skylab-core-client-js-v1-
 
       - run:
           name: Install application dependencies
@@ -22,7 +22,7 @@ jobs:
       - save_cache:
           paths:
             - ./node_modules
-          key: skylab-api-js-v1-{{ checksum "package.json" }}
+          key: skylab-core-client-js-v1-{{ checksum "package.json" }}
 
       # Lint
       - run:
