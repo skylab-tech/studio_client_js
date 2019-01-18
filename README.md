@@ -1,11 +1,11 @@
-# api_js
+# Skylab Client
 
-SkylabTech JavaScript client.
+SkylabTech Genesis JavaScript client.
 
 ## Installation
 
 ```
-npm install skylabtech
+npm install skylab-genesis
 ```
 
 # Usage
@@ -13,7 +13,7 @@ npm install skylabtech
 All callbacks accept `err` and `response`:
 
 ```javascript
-var api = require('skylabtech')('API_KEY');
+var api = require('skylab-genesis')('API_KEY');
 
 var callback = function(err, response) {
   if (err) {
@@ -176,7 +176,7 @@ You will most likely find this information in your logs. To enable it, simply pu
 when instantiating the API object.
 
 ```javascript
-var api = require('skylabtech')('API_KEY', debug=true);
+var api = require('skylab-genesis')('API_KEY', debug=true);
 ```
 
 ### Response Ranges
