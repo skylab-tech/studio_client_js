@@ -2,15 +2,15 @@ const { assert } = require('chai');
 const restler = require('restler');
 const sinon = require('sinon');
 
-const skylab = require('../lib/skylab');
+const skylabGenesis = require('../lib/skylabGenesis');
 
 const API_KEY = 'API_CLIENT_TEST_KEY';
 
-describe('SkylabTech API client', () => {
+describe('Skylab Genesis API client', () => {
   let client;
 
   before((done) => {
-    client = skylab(API_KEY);
+    client = skylabGenesis(API_KEY);
 
     done();
   });
