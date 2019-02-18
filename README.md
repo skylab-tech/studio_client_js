@@ -2,6 +2,10 @@
 
 SkylabTech Genesis JavaScript client.
 
+[genesis.skylabtech.ai](https://genesis.skylabtech.ai)
+
+[![CircleCI](https://circleci.com/gh/skylab-tech/genesis_client_js.svg?style=svg)](https://circleci.com/gh/skylab-tech/genesis_client_js)
+
 ## Installation
 
 ```
