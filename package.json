@@ -1,8 +1,8 @@
 {
   "name": "skylab-genesis",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "author": "SkylabTech <info@skylabtech.ai>",
-  "description": "Skylabtech.ai JavaScript client",
+  "description": "genesis.skylabtech.ai JavaScript client",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",

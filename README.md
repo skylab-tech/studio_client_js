@@ -1,4 +1,4 @@
-# Skylab Client
+# Skylab Genesis JavaScript Client
 
 SkylabTech Genesis JavaScript client.
 
@@ -192,3 +192,11 @@ If you're receiving an error in the 400 response range follow these steps:
 -   Double check the data and ID's getting passed to Skylab
 -   Ensure your API key is correct
 -   Log and check the body of the response
+
+## Tests
+
+To run the tests:
+
+```bash
+$ npm run test
+```
