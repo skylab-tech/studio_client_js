@@ -7,7 +7,8 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "NODE_ENV=test mocha"
+    "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha",
+    "test:coverage": "NODE_ENV=test nyc --reporter=lcov mocha"
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/skylab-tech/genesis_client_js",
@@ -40,6 +41,7 @@
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "mocha": "^5.2.0",
+    "nyc": "^13.3.0",
     "sinon": "^7.2.2"
   }
 }
