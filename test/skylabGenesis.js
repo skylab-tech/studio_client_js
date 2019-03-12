@@ -1,5 +1,4 @@
 const { assert } = require('chai');
-const restler = require('restler');
 const sinon = require('sinon');
 
 const skylabGenesis = require('../lib/skylabGenesis');
@@ -15,281 +14,173 @@ describe('Skylab Genesis API client', () => {
     done();
   });
 
-  describe('jobs', () => {
-    describe('listJobs', () => {
-      it('should return the jobs', (done) => {
-        const stub = sinon.stub(restler, 'get').returns({
-          once: sinon.stub().yields([{ id: 1 }], {}),
-        });
+  describe('_debug', () => {
+    it('should console.log parameter when debug mode is on', (done) => {
+      client.DEBUG = true;
 
-        client.listJobs({}, (err, result) => {
-          assert.equal(result.length, 1);
+      const spy = sinon.spy(console, 'log');
 
-          stub.restore();
+      client._debug('test');
 
-          done();
-        });
-      });
+      assert(spy.withArgs('SKYLABTECH: test').calledOnce);
+
+      spy.restore();
+
+      done();
     });
 
-    describe('createJob', () => {
-      it('should return the created job', (done) => {
-        const stub = sinon.stub(restler, 'postJson').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
+    it('should not console.log parameter when debug mode is off', (done) => {
+      client.DEBUG = false;
 
-        client.createJob({}, (err, result) => {
-          assert.equal(result.id, 1);
+      const spy = sinon.spy(console, 'log');
 
-          stub.restore();
+      client._debug('test');
 
-          done();
-        });
-      });
-    });
+      assert(spy.withArgs('SKYLABTECH: test').notCalled);
 
-    describe('getJob', () => {
-      it('should return the job', (done) => {
-        const stub = sinon.stub(restler, 'get').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
+      spy.restore();
 
-        client.getJob({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
-      });
-    });
-
-    describe('updateJob', () => {
-      it('should return the updated job', (done) => {
-        const stub = sinon.stub(restler, 'patchJson').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
-
-        client.updateJob({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
-      });
-    });
-
-    describe('deleteJob', () => {
-      it('should return empty object', (done) => {
-        const stub = sinon.stub(restler, 'del').returns({
-          once: sinon.stub().yields({}, { statusCode: 204 }),
-        });
-
-        client.deleteJob({ id: 1 }, (err, result) => {
-          assert.isEmpty(result);
-
-          stub.restore();
-
-          done();
-        });
-      });
-    });
-
-    describe('processJob', () => {
-      it('should return the processed job', (done) => {
-        const stub = sinon.stub(restler, 'post').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
-
-        client.processJob({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
-      });
-    });
-
-    describe('cancelJob', () => {
-      it('should return the canceled job', (done) => {
-        const stub = sinon.stub(restler, 'post').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
-
-        client.cancelJob({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
-      });
+      done();
     });
   });
 
-  describe('profiles', () => {
-    describe('listProfiles', () => {
-      it('should return the profiles', (done) => {
-        const stub = sinon.stub(restler, 'get').returns({
-          once: sinon.stub().yields([{ id: 1 }], {}),
-        });
+  describe('_buildHeaders', () => {
+    it('should build the headers', (done) => {
+      const headers = client._buildHeaders('test');
 
-        client.listProfiles({}, (err, result) => {
-          assert.equal(result.length, 1);
+      assert.equal(Object.keys(headers).length, 2);
 
-          stub.restore();
-
-          done();
-        });
-      });
-    });
-
-    describe('createProfile', () => {
-      it('should return the created profile', (done) => {
-        const stub = sinon.stub(restler, 'postJson').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
-
-        client.createProfile({}, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
-      });
-    });
-
-    describe('getProfile', () => {
-      it('should return the profile', (done) => {
-        const stub = sinon.stub(restler, 'get').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
-
-        client.getProfile({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
-      });
-    });
-
-    describe('updateProfile', () => {
-      it('should return the updated profile', (done) => {
-        const stub = sinon.stub(restler, 'patchJson').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
-
-        client.updateProfile({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
-      });
-    });
-
-    describe('deleteProfile', () => {
-      it('should return empty object', (done) => {
-        const stub = sinon.stub(restler, 'del').returns({
-          once: sinon.stub().yields({}, { statusCode: 204 }),
-        });
-
-        client.deleteProfile({ id: 1 }, (err, result) => {
-          assert.isEmpty(result);
-
-          stub.restore();
-
-          done();
-        });
-      });
+      done();
     });
   });
 
-  describe('photos', () => {
-    describe('listPhotos', () => {
-      it('should return the photos', (done) => {
-        const stub = sinon.stub(restler, 'get').returns({
-          once: sinon.stub().yields([{ id: 1 }], {}),
-        });
+  describe('_getOptions', () => {
+    it('should return options', (done) => {
+      const options = client._getOptions();
 
-        client.listPhotos({}, (err, result) => {
-          assert.equal(result.length, 1);
+      assert.isDefined(options.headers);
 
-          stub.restore();
+      done();
+    });
+  });
 
-          done();
-        });
-      });
+  describe('_buildUrl', () => {
+    it('should build default URL', (done) => {
+      const url = client._buildUrl();
+
+      assert.equal(url, 'https://genesis.skylabtech.ai/api/v1/');
+
+      done();
     });
 
-    describe('createPhoto', () => {
-      it('should return the created photo', (done) => {
-        const stub = sinon.stub(restler, 'postJson').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
+    it('should build URL with resource', (done) => {
+      const url = client._buildUrl('jobs');
 
-        client.createPhoto({}, (err, result) => {
-          assert.equal(result.id, 1);
+      assert.equal(url, 'https://genesis.skylabtech.ai/api/v1/jobs');
 
-          stub.restore();
-
-          done();
-        });
-      });
+      done();
     });
 
-    describe('getPhoto', () => {
-      it('should return the photo', (done) => {
-        const stub = sinon.stub(restler, 'get').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
+    it('should build URL with identified', (done) => {
+      const url = client._buildUrl('jobs', '1');
 
-        client.getPhoto({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
+      assert.equal(url, 'https://genesis.skylabtech.ai/api/v1/jobs/1');
 
-          stub.restore();
-
-          done();
-        });
-      });
+      done();
     });
 
-    describe('updatePhoto', () => {
-      it('should return the updated photo', (done) => {
-        const stub = sinon.stub(restler, 'patchJson').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
+    it('should build URL with action', (done) => {
+      const url = client._buildUrl('jobs', '1', 'process');
 
-        client.updatePhoto({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
+      assert.equal(url, 'https://genesis.skylabtech.ai/api/v1/jobs/1/process');
 
-          stub.restore();
+      done();
+    });
+  });
 
-          done();
-        });
-      });
+  describe('_handleResponse', () => {
+    it('should handle client errors', (done) => {
+      const spy = sinon.spy(client, '_handleClientError');
+
+      client._handleResponse(new Error('Test error'), null, null);
+
+      assert(spy.calledOnce);
+
+      spy.restore();
+
+      done();
     });
 
-    describe('deletePhoto', () => {
-      it('should return empty object', (done) => {
-        const stub = sinon.stub(restler, 'del').returns({
-          once: sinon.stub().yields({}, { statusCode: 204 }),
-        });
+    it('should handle success for 200 response code', (done) => {
+      const spy = sinon.spy(client, '_handleSuccess');
 
-        client.deletePhoto({ id: 1 }, (err, result) => {
-          assert.isEmpty(result);
+      client._handleResponse(null, { statusCode: 200 }, null);
 
-          stub.restore();
+      assert(spy.calledOnce);
 
-          done();
-        });
-      });
+      spy.restore();
+
+      done();
+    });
+
+    it('should handle success for 399 response code', (done) => {
+      const spy = sinon.spy(client, '_handleSuccess');
+
+      client._handleResponse(null, { statusCode: 399 }, null);
+
+      assert(spy.calledOnce);
+
+      spy.restore();
+
+      done();
+    });
+
+    it('should handle server error for 400 response code', (done) => {
+      const spy = sinon.spy(client, '_handleServerError');
+
+      client._handleResponse(null, { statusCode: 400 }, null);
+
+      assert(spy.calledOnce);
+
+      spy.restore();
+
+      done();
+    });
+  });
+
+  describe('_handleClientError', () => {
+    it('should invoke callback', (done) => {
+      const stub = sinon.stub();
+
+      client._handleClientError(new Error('Test error'), null, stub);
+
+      assert(stub.calledOnce);
+
+      done();
+    });
+  });
+
+  describe('_handleSuccess', () => {
+    it('should invoke callback', (done) => {
+      const stub = sinon.stub();
+
+      client._handleSuccess({}, { statusCode: 200 }, stub);
+
+      assert(stub.calledOnce);
+
+      done();
+    });
+  });
+
+  describe('_handleServerError', () => {
+    it('should invoke callback', (done) => {
+      const stub = sinon.stub();
+
+      client._handleServerError({}, { statusCode: 400 }, stub);
+
+      assert(stub.calledOnce);
+
+      done();
     });
   });
 });
