@@ -3,7 +3,7 @@ version: 2
 jobs:
   test:
     docker:
-      - image: circleci/node:7.10
+      - image: circleci/node:13.5.0
 
     steps:
       - checkout
