@@ -29,7 +29,7 @@ jobs:
       - run:
           name: Install application dependencies
           command: |
-            npm i
+            yarn
 
       - save_cache:
           paths:
@@ -39,13 +39,13 @@ jobs:
       # Lint
       - run:
           name: Lint
-          command: npm run lint
+          command: yarn run lint
 
       # Unit tests
       - run:
           name: Run unit tests
           command: |
-            npm run test:coverage
+            yarn run test:coverage
             ./tmp/cc-test-reporter format-coverage -t lcov -o tmp/codeclimate.unit.json coverage/lcov.info
 
        # Upload results to CodeClimate
