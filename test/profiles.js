@@ -1,99 +1,99 @@
-const { assert } = require('chai')
-const restler = require('restler')
-const sinon = require('sinon')
+const { assert } = require('chai');
+const restler = require('restler');
+const sinon = require('sinon');
 
-const skylabStudio = require('../lib/skylabStudio')
+const skylabStudio = require('../lib/skylabStudio');
 
-const API_KEY = 'API_CLIENT_TEST_KEY'
+const API_KEY = 'API_CLIENT_TEST_KEY';
 
 describe('Skylab Studio API client', () => {
-  let client
+  let client;
 
-  before(done => {
-    client = skylabStudio(API_KEY)
+  before((done) => {
+    client = skylabStudio(API_KEY);
 
-    done()
-  })
+    done();
+  });
 
   describe('profiles', () => {
     describe('listProfiles', () => {
-      it('should return the profiles', done => {
+      it('should return the profiles', (done) => {
         const stub = sinon.stub(restler, 'get').returns({
-          once: sinon.stub().yields([{ id: 1 }], {})
-        })
+          once: sinon.stub().yields([{ id: 1 }], {}),
+        });
 
         client.listProfiles({}, (err, result) => {
-          assert.equal(result.length, 1)
+          assert.equal(result.length, 1);
 
-          stub.restore()
+          stub.restore();
 
-          done()
-        })
-      })
-    })
+          done();
+        });
+      });
+    });
 
     describe('createProfile', () => {
-      it('should return the created profile', done => {
+      it('should return the created profile', (done) => {
         const stub = sinon.stub(restler, 'postJson').returns({
-          once: sinon.stub().yields({ id: 1 }, {})
-        })
+          once: sinon.stub().yields({ id: 1 }, {}),
+        });
 
         client.createProfile({}, (err, result) => {
-          assert.equal(result.id, 1)
+          assert.equal(result.id, 1);
 
-          stub.restore()
+          stub.restore();
 
-          done()
-        })
-      })
-    })
+          done();
+        });
+      });
+    });
 
     describe('getProfile', () => {
-      it('should return the profile', done => {
+      it('should return the profile', (done) => {
         const stub = sinon.stub(restler, 'get').returns({
-          once: sinon.stub().yields({ id: 1 }, {})
-        })
+          once: sinon.stub().yields({ id: 1 }, {}),
+        });
 
         client.getProfile({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1)
+          assert.equal(result.id, 1);
 
-          stub.restore()
+          stub.restore();
 
-          done()
-        })
-      })
-    })
+          done();
+        });
+      });
+    });
 
     describe('updateProfile', () => {
-      it('should return the updated profile', done => {
+      it('should return the updated profile', (done) => {
         const stub = sinon.stub(restler, 'patchJson').returns({
-          once: sinon.stub().yields({ id: 1 }, {})
-        })
+          once: sinon.stub().yields({ id: 1 }, {}),
+        });
 
         client.updateProfile({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1)
+          assert.equal(result.id, 1);
 
-          stub.restore()
+          stub.restore();
 
-          done()
-        })
-      })
-    })
+          done();
+        });
+      });
+    });
 
     describe('deleteProfile', () => {
-      it('should return empty object', done => {
+      it('should return empty object', (done) => {
         const stub = sinon.stub(restler, 'del').returns({
-          once: sinon.stub().yields({}, { statusCode: 204 })
-        })
+          once: sinon.stub().yields({}, { statusCode: 204 }),
+        });
 
         client.deleteProfile({ id: 1 }, (err, result) => {
-          assert.isEmpty(result)
+          assert.isEmpty(result);
 
-          stub.restore()
+          stub.restore();
 
-          done()
-        })
-      })
-    })
-  })
-})
+          done();
+        });
+      });
+    });
+  });
+});

@@ -1,1 +1,1 @@
-module.exports = require('./lib/skylabStudio')
+module.exports = require('./lib/skylabStudio');
