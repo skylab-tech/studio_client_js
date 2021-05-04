@@ -8,9 +8,9 @@ jobs:
     steps:
       - checkout
 
-       # Download CodeClimate reporter
+        # Download CodeClimate reporter
       - run:
-          name:  Download cc-test-reporter
+          name: Download cc-test-reporter
           command: |
             mkdir -p tmp/
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
@@ -23,8 +23,8 @@ jobs:
       # Restore cache
       - restore_cache:
           keys:
-            - skylab-genesis-client-js-v1-{{ checksum "package.json" }}
-            - skylab-genesis-client-js-v1-
+            - skylab-studio-client-js-v1-{{ checksum "package.json" }}
+            - skylab-studio-client-js-v1-
 
       - run:
           name: Install application dependencies
@@ -34,7 +34,7 @@ jobs:
       - save_cache:
           paths:
             - ./node_modules
-          key: skylab-genesis-client-js-v1-{{ checksum "package.json" }}
+          key: skylab-studio-client-js-v1-{{ checksum "package.json" }}
 
       # Lint
       - run:
@@ -48,7 +48,7 @@ jobs:
             yarn run test:coverage
             ./tmp/cc-test-reporter format-coverage -t lcov -o tmp/codeclimate.unit.json coverage/lcov.info
 
-       # Upload results to CodeClimate
+        # Upload results to CodeClimate
       - attach_workspace:
           at: ~/repo/tmp
       - run:

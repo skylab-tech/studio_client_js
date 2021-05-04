@@ -1,8 +1,8 @@
 {
-  "name": "skylab-genesis",
+  "name": "skylab-studio",
   "version": "1.0.1",
   "author": "SkylabTech <info@skylabtech.ai>",
-  "description": "genesis.skylabtech.ai JavaScript client",
+  "description": "studio.skylabtech.ai JavaScript client",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
@@ -11,13 +11,13 @@
     "test:coverage": "NODE_ENV=test nyc --reporter=lcov mocha"
   },
   "license": "Apache-2.0",
-  "homepage": "https://github.com/skylab-tech/genesis_client_js",
+  "homepage": "https://github.com/skylab-tech/studio_client_js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/skylab-tech/genesis_client_js"
+    "url": "https://github.com/skylab-tech/studio_client_js"
   },
   "bugs": {
-    "url": "https://github.com/skylab-tech/genesis_client_js/issues"
+    "url": "https://github.com/skylab-tech/studio_client_js/issues"
   },
   "directories": {
     "test": ".test/",
