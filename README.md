@@ -16,20 +16,20 @@ npm install skylab-studio
 
 # Usage
 
-All callbacks accept `err` and `response`:
+All callbacks accept `err`, `status` and `result`:
 
 ```javascript
-var api = require('skylab-studio')('API_KEY')
+var api = require("skylab-studio")("API_KEY");
 
-var callback = function (err, response) {
+var callback = function (err, status, result) {
   if (err) {
-    console.log(err.statusCode, response)
+    console.log(err, status, result);
   } else {
-    console.log(response)
+    console.log(status, result);
   }
-}
+};
 
-api.createJob(data, callback)
+api.createJob(data, callback);
 ```
 
 ## Jobs
@@ -37,7 +37,7 @@ api.createJob(data, callback)
 ### List all Jobs
 
 ```javascript
-api.listJobs({}, callback)
+api.listJobs({}, callback);
 ```
 
 ### Create a Job
@@ -46,17 +46,17 @@ api.listJobs({}, callback)
 api.createJob(
   {
     job: {
-      profile_id: 123
-    }
+      profile_id: 123,
+    },
   },
   callback
-)
+);
 ```
 
 ### Get a Job
 
 ```javascript
-api.getJob({ id: 1 }, callback)
+api.getJob({ id: 1 }, callback);
 ```
 
 ### Update a Job
@@ -66,29 +66,29 @@ api.updateJob(
   {
     id: 1,
     job: {
-      profile_id: 456
-    }
+      profile_id: 456,
+    },
   },
   callback
-)
+);
 ```
 
 ### Delete a Job
 
 ```javascript
-api.deleteJob({ id: 1 }, callback)
+api.deleteJob({ id: 1 }, callback);
 ```
 
 ### Process a Job
 
 ```javascript
-api.processJob({ id: 1 }, callback)
+api.processJob({ id: 1 }, callback);
 ```
 
 ### Cancel a Job
 
 ```javascript
-api.cancelJob({ id: 1 }, callback)
+api.cancelJob({ id: 1 }, callback);
 ```
 
 ## Profiles
@@ -96,7 +96,7 @@ api.cancelJob({ id: 1 }, callback)
 ### List all Profiles
 
 ```javascript
-api.listProfiles({}, callback)
+api.listProfiles({}, callback);
 ```
 
 ### Create a Profile
@@ -105,17 +105,17 @@ api.listProfiles({}, callback)
 api.createProfile(
   {
     profile: {
-      name: 'My Profile'
-    }
+      name: "My Profile",
+    },
   },
   callback
-)
+);
 ```
 
 ### Get a Profile
 
 ```javascript
-api.getProfile({ id: 1 }, callback)
+api.getProfile({ id: 1 }, callback);
 ```
 
 ### Update a Profile
@@ -125,17 +125,17 @@ api.updateProfile(
   {
     id: 1,
     job: {
-      name: 'Updated Name'
-    }
+      name: "Updated Name",
+    },
   },
   callback
-)
+);
 ```
 
 ### Delete a Profile
 
 ```javascript
-api.deleteProfile({ id: 1 }, callback)
+api.deleteProfile({ id: 1 }, callback);
 ```
 
 ## Photos
@@ -143,7 +143,7 @@ api.deleteProfile({ id: 1 }, callback)
 ### List all Photos
 
 ```javascript
-api.listPhotos({}, callback)
+api.listPhotos({}, callback);
 ```
 
 ### Create a Photo
@@ -152,17 +152,17 @@ api.listPhotos({}, callback)
 api.createPhoto(
   {
     profile: {
-      name: 'My Photo'
-    }
+      name: "My Photo",
+    },
   },
   callback
-)
+);
 ```
 
 ### Get a Photo
 
 ```javascript
-api.getPhoto({ id: 1 }, callback)
+api.getPhoto({ id: 1 }, callback);
 ```
 
 ### Update a Photo
@@ -172,17 +172,17 @@ api.updatePhoto(
   {
     id: 1,
     job: {
-      name: 'Updated Name'
-    }
+      name: "Updated Name",
+    },
   },
   callback
-)
+);
 ```
 
 ### Delete a Photo
 
 ```javascript
-api.deletePhoto({ id: 1 }, callback)
+api.deletePhoto({ id: 1 }, callback);
 ```
 
 ## Troubleshooting
@@ -200,7 +200,7 @@ You will most likely find this information in your logs. To enable it, simply pu
 when instantiating the API object.
 
 ```javascript
-var api = require('skylab-studio')('API_KEY', (debug = true))
+var api = require("skylab-studio")("API_KEY", (debug = true));
 ```
 
 ### Response Ranges
