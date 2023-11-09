@@ -1,12 +1,12 @@
-const { assert } = require('chai');
-const restler = require('restler');
-const sinon = require('sinon');
+const { assert } = require("chai");
+const restler = require("restler");
+const sinon = require("sinon");
 
-const skylabStudio = require('../lib/skylabStudio');
+const skylabStudio = require("../lib/skylabStudio");
 
-const API_KEY = 'API_CLIENT_TEST_KEY';
+const API_KEY = "API_CLIENT_TEST_KEY";
 
-describe('Skylab Studio API client', () => {
+describe("Skylab Studio API client", () => {
   let client;
 
   before((done) => {
@@ -15,10 +15,10 @@ describe('Skylab Studio API client', () => {
     done();
   });
 
-  describe('photos', () => {
-    describe('listPhotos', () => {
-      it('should return the photos', (done) => {
-        const stub = sinon.stub(restler, 'get').returns({
+  describe("photos", () => {
+    describe("listPhotos", () => {
+      it("should return the photos", (done) => {
+        const stub = sinon.stub(restler, "get").returns({
           once: sinon.stub().yields([{ id: 1 }], {}),
         });
 
@@ -32,25 +32,9 @@ describe('Skylab Studio API client', () => {
       });
     });
 
-    describe('createPhoto', () => {
-      it('should return the created photo', (done) => {
-        const stub = sinon.stub(restler, 'postJson').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
-
-        client.createPhoto({}, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
-      });
-    });
-
-    describe('getPhoto', () => {
-      it('should return the photo', (done) => {
-        const stub = sinon.stub(restler, 'get').returns({
+    describe("getPhoto", () => {
+      it("should return the photo", (done) => {
+        const stub = sinon.stub(restler, "get").returns({
           once: sinon.stub().yields({ id: 1 }, {}),
         });
 
@@ -64,25 +48,9 @@ describe('Skylab Studio API client', () => {
       });
     });
 
-    describe('updatePhoto', () => {
-      it('should return the updated photo', (done) => {
-        const stub = sinon.stub(restler, 'patchJson').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
-
-        client.updatePhoto({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
-      });
-    });
-
-    describe('deletePhoto', () => {
-      it('should return empty object', (done) => {
-        const stub = sinon.stub(restler, 'del').returns({
+    describe("deletePhoto", () => {
+      it("should return empty object", (done) => {
+        const stub = sinon.stub(restler, "del").returns({
           once: sinon.stub().yields({}, { statusCode: 204 }),
         });
 

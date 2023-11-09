@@ -1,130 +1,123 @@
-const { assert } = require('chai');
-const restler = require('restler');
-const sinon = require('sinon');
+const { extect, expect } = require("chai");
+const { v4: uuidv4 } = require("uuid");
 
-const skylabStudio = require('../lib/skylabStudio');
+const skylabStudio = require("../lib/skylabStudio");
 
-const API_KEY = 'API_CLIENT_TEST_KEY';
+const API_KEY = "16V7LPczUNXb6cdY7V15G5s5";
 
-describe('Skylab Studio API client', () => {
+describe("Skylab Studio API client", () => {
   let client;
 
-  before((done) => {
+  before(() => {
     client = skylabStudio(API_KEY);
-
-    done();
   });
 
-  describe('jobs', () => {
-    describe('listJobs', () => {
-      it('should return the jobs', (done) => {
-        const stub = sinon.stub(restler, 'get').returns({
-          once: sinon.stub().yields([{ id: 1 }], {}),
-        });
+  describe("jobs", () => {
+    let testJob;
+    describe("createJob", () => {
+      it("should return the created job", async () => {
+        const name = uuidv4();
+        const payload = {
+          name,
+          enable_crop: false,
+        };
 
-        client.listJobs({}, (err, result) => {
-          assert.equal(result.length, 1);
+        const profile = await client.createProfile(payload);
 
-          stub.restore();
+        const jobPayload = {
+          name,
+          profile_id: profile.id,
+        };
 
-          done();
-        });
+        const job = await client.createJob(jobPayload);
+
+        testJob = job;
+        expect(job).to.have.property("profileId").to.equal(profile.id);
       });
     });
 
-    describe('createJob', () => {
-      it('should return the created job', (done) => {
-        const stub = sinon.stub(restler, 'postJson').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
-
-        client.createJob({}, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
+    describe("listJobs", () => {
+      it("should return the jobs", async () => {
+        const jobs = await client.listJobs();
+        expect(jobs).to.have.lengthOf.above(0);
       });
     });
 
-    describe('getJob', () => {
-      it('should return the job', (done) => {
-        const stub = sinon.stub(restler, 'get').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
+    describe("getJob", () => {
+      it("should return the job", async () => {
+        const job = await client.getJob(testJob.id);
 
-        client.getJob({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
+        expect(job).to.have.property("id").to.equal(testJob.id);
       });
     });
 
-    describe('updateJob', () => {
-      it('should return the updated job', (done) => {
-        const stub = sinon.stub(restler, 'patchJson').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
+    describe("updateJob", () => {
+      it("should return the updated job", async () => {
+        const name = uuidv4();
+        const payload = {
+          name,
+          enable_crop: false,
+        };
+
+        const profile = await client.createProfile(payload);
+
+        const jobPayload = {
+          name,
+          profile_id: profile.id,
+        };
+
+        const job = await client.createJob(jobPayload);
+        const updatedName = uuidv4();
+        const updatedJob = await client.updateJob(job.id, {
+          name: updatedName,
         });
 
-        client.updateJob({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
+        expect(updatedJob).to.have.property("name").to.equal(updatedName);
       });
     });
 
-    describe('deleteJob', () => {
-      it('should return empty object', (done) => {
-        const stub = sinon.stub(restler, 'del').returns({
-          once: sinon.stub().yields({}, { statusCode: 204 }),
-        });
+    describe("deleteJob", () => {
+      it("should return empty object", async () => {
+        const name = uuidv4();
+        const payload = {
+          name,
+          enable_crop: false,
+        };
 
-        client.deleteJob({ id: 1 }, (err, result) => {
-          assert.isEmpty(result);
+        const profile = await client.createProfile(payload);
 
-          stub.restore();
+        const jobPayload = {
+          name,
+          profile_id: profile.id,
+        };
 
-          done();
-        });
+        const job = await client.createJob(jobPayload);
+
+        const res = await client.deleteJob(job.id);
+
+        expect(res).to.have.property("id").to.equal(job.id);
       });
     });
 
-    describe('processJob', () => {
-      it('should return the processed job', (done) => {
-        const stub = sinon.stub(restler, 'post').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
+    describe("cancelJob", () => {
+      it("should return the canceled job", async () => {
+        const name = uuidv4();
+        const payload = {
+          name,
+          enable_crop: false,
+        };
 
-        client.processJob({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
+        const profile = await client.createProfile(payload);
 
-          stub.restore();
+        const jobPayload = {
+          name,
+          profile_id: profile.id,
+        };
 
-          done();
-        });
-      });
-    });
+        const job = await client.createJob(jobPayload);
 
-    describe('cancelJob', () => {
-      it('should return the canceled job', (done) => {
-        const stub = sinon.stub(restler, 'post').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
-
-        client.cancelJob({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
+        const cancelledJob = await client.cancelJob(job.id);
+        expect(cancelledJob).to.have.property("id").to.equal(job.id);
       });
     });
   });

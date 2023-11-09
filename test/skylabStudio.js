@@ -58,7 +58,7 @@ describe("Skylab Studio API client", () => {
     it("should return options", (done) => {
       const options = client._getOptions();
 
-      assert.isDefined(options.headers);
+      assert.isDefined(headers.headers);
 
       done();
     });
