@@ -1,4 +1,4 @@
-const { extect, expect } = require("chai");
+const { expect } = require("chai");
 const { v4: uuidv4 } = require("uuid");
 
 const skylabStudio = require("../lib/skylabStudio");
