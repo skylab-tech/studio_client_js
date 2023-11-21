@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const skylabStudio = require("../lib/skylabStudio");
 
-const API_KEY = "16V7LPczUNXb6cdY7V15G5s5";
+const API_KEY = process.env.API_KEY;
 
 describe("Skylab Studio API client", () => {
   let client;

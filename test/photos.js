@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 
 const skylabStudio = require("../lib/skylabStudio");
-const API_KEY = "16V7LPczUNXb6cdY7V15G5s5";
+const API_KEY = process.env.API_KEY;
 
 describe("Skylab Studio API client", () => {
   let client;
@@ -37,45 +37,62 @@ describe("Skylab Studio API client", () => {
     });
   });
 
-  // describe("photos", () => {
-  //   describe("listPhotos", () => {
-  //     it("should return the photos", async () => {
-  //       const res = await client.listPhotos();
+  describe("listPhotos", () => {
+    it("should return the photos", async () => {
+      const res = await client.listPhotos();
 
-  //       expect(jobs).to.have.lengthOf.above(0);
-  //     });
-  //   });
-  // });
+      expect(res).to.have.lengthOf.above(0);
+    });
+  });
 
-  // describe("getPhoto", () => {
-  //   it("should return the photo", (done) => {
-  //     const stub = sinon.stub(restler, "get").returns({
-  //       once: sinon.stub().yields({ id: 1 }, {}),
-  //     });
+  describe("getPhoto", () => {
+    it("should return the photo", async () => {
+      const payload = {
+        name: uuidv4(),
+        enable_crop: false,
+      };
 
-  //     client.getPhoto({ id: 1 }, (err, result) => {
-  //       assert.equal(result.id, 1);
+      const profile = await client.createProfile(payload);
 
-  //       stub.restore();
+      const jobPayload = {
+        name: uuidv4(),
+        profile_id: profile.id,
+      };
 
-  //       done();
-  //     });
-  //   });
-  // });
+      const job = await client.createJob(jobPayload);
+      const photo = await client.createPhoto({
+        name: uuidv4(),
+        job_id: job.id,
+      });
 
-  // describe("deletePhoto", () => {
-  //   it("should return empty object", (done) => {
-  //     const stub = sinon.stub(restler, "del").returns({
-  //       once: sinon.stub().yields({}, { statusCode: 204 }),
-  //     });
+      const res = await client.getPhoto(photo.id);
+      expect(res).to.have.property("id").to.equal(photo.id);
+    });
+  });
 
-  //     client.deletePhoto({ id: 1 }, (err, result) => {
-  //       assert.isEmpty(result);
+  describe("deletePhoto", () => {
+    it("should return the deleted photo", async () => {
+      const payload = {
+        name: uuidv4(),
+        enable_crop: false,
+      };
 
-  //       stub.restore();
+      const profile = await client.createProfile(payload);
 
-  //       done();
-  //     });
-  //   });
-  // });
+      const jobPayload = {
+        name: uuidv4(),
+        profile_id: profile.id,
+      };
+
+      const job = await client.createJob(jobPayload);
+
+      const photo = await client.createPhoto({
+        name: uuidv4(),
+        job_id: job.id,
+      });
+
+      const res = await client.deletePhoto(photo.id);
+      expect(res).to.have.property("id").to.equal(photo.id);
+    });
+  });
 });
