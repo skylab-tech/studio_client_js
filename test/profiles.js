@@ -1,100 +1,68 @@
-const { assert } = require("chai");
-const restler = require("restler");
-const sinon = require("sinon");
+const { expect } = require("chai");
+const { v4: uuidv4 } = require("uuid");
 
 const skylabStudio = require("../lib/skylabStudio");
 
-const API_KEY = "16V7LPczUNXb6cdY7V15G5s5";
+const API_KEY = process.env.API_KEY;
 
 describe("Skylab Studio API client", () => {
   let client;
 
-  before((done) => {
+  before(() => {
     client = skylabStudio(API_KEY);
-
-    done();
   });
 
-  describe("profiles", () => {
-    describe("listProfiles", () => {
-      it("should return the profiles", (done) => {
-        // const stub = sinon.stub(restler, 'get').returns({
-        //   once: sinon.stub().yields([{ id: 1 }], {}),
-        // });
+  describe("createProfile", () => {
+    it("should return the created profile", async () => {
+      const name = uuidv4();
+      const payload = {
+        name,
+        enable_crop: false,
+      };
 
-        client.listProfiles({}, (status, err, result) => {
-          console.log("RESULT~~~", status, err, result);
-          // assert.equal(result.length, 1);
+      const profile = await client.createProfile(payload);
 
-          // stub.restore();
-
-          done();
-        });
-      });
+      expect(profile.name).to.equal(name);
     });
+  });
 
-    describe("createProfile", () => {
-      it("should return the created profile", (done) => {
-        const stub = sinon.stub(restler, "postJson").returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
-
-        client.createProfile({}, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
-      });
+  describe("listProfiles", () => {
+    it("should return the profiles", async () => {
+      const res = await client.listProfiles();
+      expect(res).to.have.lengthOf.above(0);
     });
+  });
 
-    describe("getProfile", () => {
-      it("should return the profile", (done) => {
-        const stub = sinon.stub(restler, "get").returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
+  describe("getProfile", () => {
+    it("should return the profile", async () => {
+      const profilePayload = {
+        name: uuidv4(),
+        enable_crop: false,
+      };
+      const profile = await client.createProfile(profilePayload);
+      const res = await client.getProfile(profile.id);
 
-        client.getProfile({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
-      });
+      expect(res).to.have.property("id").to.equal(profile.id);
     });
+  });
 
-    describe("updateProfile", () => {
-      it("should return the updated profile", (done) => {
-        const stub = sinon.stub(restler, "patchJson").returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
+  describe("updateProfile", () => {
+    it("should return the updated profile", async () => {
+      const profilePayload = {
+        name: uuidv4(),
+        enable_crop: false,
+      };
+      const profile = await client.createProfile(profilePayload);
 
-        client.updateProfile({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
-      });
-    });
-
-    describe("deleteProfile", () => {
-      it("should return empty object", (done) => {
-        const stub = sinon.stub(restler, "del").returns({
-          once: sinon.stub().yields({}, { statusCode: 204 }),
-        });
-
-        client.deleteProfile({ id: 1 }, (err, result) => {
-          assert.isEmpty(result);
-
-          stub.restore();
-
-          done();
-        });
-      });
+      const updatedName = uuidv4();
+      const updatedProfilePayload = {
+        name: updatedName,
+      };
+      const updatedProfile = await client.updateProfile(
+        profile.id,
+        updatedProfilePayload
+      );
+      expect(updatedProfile).to.have.property("name").to.equal(updatedName);
     });
   });
 });

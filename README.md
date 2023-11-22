@@ -1,11 +1,5 @@
 # Skylab Studio JavaScript Client
 
-[![CircleCI](https://circleci.com/gh/skylab-tech/studio_client_js.svg?style=svg)](https://circleci.com/gh/skylab-tech/studio_client_js)
-[![Maintainability](https://api.codeclimate.com/v1/badges/e8796dc3efe2e7bc53bd/maintainability)](https://codeclimate.com/github/skylab-tech/studio_client_js/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/e8796dc3efe2e7bc53bd/test_coverage)](https://codeclimate.com/github/skylab-tech/studio_client_js/test_coverage)
-
-SkylabTech Studio JavaScript client.
-
 [studio.skylabtech.ai](https://studio.skylabtech.ai)
 
 ## Installation
@@ -14,22 +8,36 @@ SkylabTech Studio JavaScript client.
 npm install skylab-studio
 ```
 
-# Usage
-
-All callbacks accept `err`, `status` and `result`:
+## Example usage
 
 ```javascript
-var api = require("skylab-studio")("API_KEY");
+// CREATE PROFILE
+const profilePayload = {
+  "name": "profile name",
+  "enable_crop": false,
+  "enable_retouch": true
+}
 
-var callback = function (err, status, result) {
-  if (err) {
-    console.log(err, status, result);
-  } else {
-    console.log(status, result);
-  }
-};
+const profile = await api.createProfile(profilePayload)
 
-api.createJob(data, callback);
+// CREATE JOB
+const jobPayload = {
+  "name": "job name",
+  "profile_id": profile.id
+}
+
+const job = await api.createJob(jobPayload)
+
+// UPLOAD JOB PHOTO(S)
+const filePath = "/path/to/photo"
+await api.uploadJobPhoto(filePath, job.id)
+
+// QUEUE JOB
+payload = { "callback_url" = "YOUR_CALLBACK_ENDPOINT" }
+await api.queueJob(job.id, payload)
+
+// NOTE: Once the job is queued, it will get processed then completed
+// We will send a response to the specified callback_url with the output photo download urls
 ```
 
 ## Jobs
@@ -37,58 +45,66 @@ api.createJob(data, callback);
 ### List all Jobs
 
 ```javascript
-api.listJobs({}, callback);
+await api.listJobs();
 ```
 
 ### Create a Job
 
 ```javascript
-api.createJob(
-  {
-    job: {
-      profile_id: 123,
-    },
-  },
-  callback
-);
+await api.createJob({
+  name: "your job name",
+  profile_id: 123,
+});
 ```
+
+For all payload options, consult the [API documentation](https://studio-docs.skylabtech.ai/#tag/job/operation/createJob).
 
 ### Get a Job
 
 ```javascript
-api.getJob({ id: 1 }, callback);
+await api.getJob(jobId);
+```
+
+### Get Job by Name
+
+```javascript
+await api.getJobByName(name);
 ```
 
 ### Update a Job
 
 ```javascript
-api.updateJob(
-  {
-    id: 1,
-    job: {
-      profile_id: 456,
-    },
-  },
-  callback
-);
+await api.updateJob(jobId, { name: "updated job name", profile_id: 456 });
+```
+
+For all payload options, consult the [API documentation](https://studio-docs.skylabtech.ai/#tag/job/operation/updateJobById).
+
+### Queue Job
+
+```javascript
+const payload = {
+  callback_url: "desired_callback_url",
+};
+
+await api.queueJob(jobId, payload);
+```
+
+### Jobs in Front
+
+```javascript
+await api.getJobsInFront(jobId);
 ```
 
 ### Delete a Job
 
 ```javascript
-api.deleteJob({ id: 1 }, callback);
-```
-
-### Process a Job
-
-```javascript
-api.processJob({ id: 1 }, callback);
+await api.deleteJob(jobId);
 ```
 
 ### Cancel a Job
 
 ```javascript
-api.cancelJob({ id: 1 }, callback);
+await api.cancelJob(jobId);
 ```
 
 ## Profiles
@@ -96,93 +112,92 @@ api.cancelJob({ id: 1 }, callback);
 ### List all Profiles
 
 ```javascript
-api.listProfiles({}, callback);
+await api.listProfiles();
 ```
 
 ### Create a Profile
 
 ```javascript
-api.createProfile(
-  {
-    profile: {
-      name: "My Profile",
-    },
-  },
-  callback
-);
+await api.createProfile({
+  name: "My Profile",
+});
 ```
+
+For all payload options, consult the [API documentation](https://studio-docs.skylabtech.ai/#tag/profile/operation/createProfile).
 
 ### Get a Profile
 
 ```javascript
-api.getProfile({ id: 1 }, callback);
+await api.getProfile(profileId);
 ```
 
-### Update a Profile
+### Update profile
 
 ```javascript
-api.updateProfile(
-  {
-    id: 1,
-    job: {
-      name: "Updated Name",
-    },
-  },
-  callback
-);
+payload = {
+  name: "My updated profile name",
+};
+
+await api.updateProfile(profileId, payload);
 ```
 
-### Delete a Profile
-
-```javascript
-api.deleteProfile({ id: 1 }, callback);
-```
+For all payload options, consult the [API documentation](https://studio-docs.skylabtech.ai/#tag/profile/operation/updateProfileById).
 
 ## Photos
 
 ### List all Photos
 
 ```javascript
-api.listPhotos({}, callback);
+await api.listPhotos();
 ```
 
-### Create a Photo
+#### Upload Job Photo
+
+This function handles validating a photo, creating a photo object and uploading it to your job/profile's s3 bucket. If the bucket upload process fails, it retries 3 times and if failures persist, the photo object is deleted.
 
 ```javascript
-api.createPhoto(
-  {
-    profile: {
-      name: "My Photo",
-    },
-  },
-  callback
-);
+await api.uploadJobPhoto(photoPath, jobId);
 ```
+
+`Returns: { photo: { photoObject }, uploadResponse: bucketUploadResponseStatus }`
+
+If upload fails, the photo object is deleted for you. If upload succeeds and you later decide you no longer want to include that image, use delete_photo to remove it.
+
+#### Upload Profile Photo
+
+This function handles validating a background photo for a profile. Note: `enable_extract` and `replace_background` (profile attributes) **MUST** be true in order to create background photos. Follows the same upload process as uploadJobPhoto.
+
+```javascript
+await api.uploadProfilePhoto(photoPath, profileId);
+```
+
+`Returns: { photo: { photoObject }, uploadResponse: bucketUploadResponseStatus }`
+
+If upload fails, the photo object is deleted for you. If upload succeeds and you later decide you no longer want to include that image, use delete_photo to remove it.
 
 ### Get a Photo
 
 ```javascript
-api.getPhoto({ id: 1 }, callback);
-```
-
-### Update a Photo
-
-```javascript
-api.updatePhoto(
-  {
-    id: 1,
-    job: {
-      name: "Updated Name",
-    },
-  },
-  callback
-);
+await api.getPhoto(photoId);
 ```
 
 ### Delete a Photo
 
 ```javascript
-api.deletePhoto({ id: 1 }, callback);
+await api.deletePhoto(photoId);
+```
+
+### Validate HMAC Headers
+
+- secretKey: Obtained from Skylab account (contact)
+- jobJson: Raw JSON response from callback
+- requestTimestamp: Timestamp header received in callback under 'X-Skylab-Timestamp'
+- signature: Signature header received in callback under 'X-Skylab-Signature'
+
+**NOTE:** If using something like an express server to handle the callback, the JSON response needs to be the raw response. If your express server is running `app.use(express.json)` you will need to create a middleware and pass it to your callback handler to use the raw response: `app.use(express.raw({ type: "application/json" }))`
+
+```javascript
+await api.validateHmacHeaders(secretKey, jobJson, requestTimestamp, signature);
 ```
 
 ## Troubleshooting
@@ -200,7 +215,9 @@ You will most likely find this information in your logs. To enable it, simply pu
 when instantiating the API object.
 
 ```javascript
-var api = require("skylab-studio")("API_KEY", (debug = true));
+const skylabStudio = require("skylabStudio");
+
+const api = skylabStudio("your-api-key", (debug = true));
 ```
 
 ### Response Ranges
@@ -216,11 +233,3 @@ If you're receiving an error in the 400 response range follow these steps:
 - Double check the data and ID's getting passed to Skylab
 - Ensure your API key is correct
 - Log and check the body of the response
-
-## Tests
-
-To run the tests:
-
-```bash
-$ npm run test
-```

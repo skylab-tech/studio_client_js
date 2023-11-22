@@ -1,99 +1,98 @@
-const { assert } = require('chai');
-const restler = require('restler');
-const sinon = require('sinon');
+const { expect } = require("chai");
+const { v4: uuidv4 } = require("uuid");
+const path = require("path");
 
-const skylabStudio = require('../lib/skylabStudio');
+const skylabStudio = require("../lib/skylabStudio");
+const API_KEY = process.env.API_KEY;
 
-const API_KEY = 'API_CLIENT_TEST_KEY';
-
-describe('Skylab Studio API client', () => {
+describe("Skylab Studio API client", () => {
   let client;
 
-  before((done) => {
+  before(() => {
     client = skylabStudio(API_KEY);
-
-    done();
   });
 
-  describe('photos', () => {
-    describe('listPhotos', () => {
-      it('should return the photos', (done) => {
-        const stub = sinon.stub(restler, 'get').returns({
-          once: sinon.stub().yields([{ id: 1 }], {}),
-        });
+  describe("Upload job photo", () => {
+    it("should return 200 from upload process", async () => {
+      const name = uuidv4();
+      const payload = {
+        name,
+        enable_crop: false,
+      };
 
-        client.listPhotos({}, (err, result) => {
-          assert.equal(result.length, 1);
+      const profile = await client.createProfile(payload);
 
-          stub.restore();
+      const jobPayload = {
+        name,
+        profile_id: profile.id,
+      };
 
-          done();
-        });
-      });
+      const job = await client.createJob(jobPayload);
+      const res = await client.uploadJobPhoto(
+        path.join(__dirname, "test-portrait-1.JPG"),
+        job.id
+      );
+
+      expect(res.upload_response).to.equal(200);
     });
+  });
 
-    describe('createPhoto', () => {
-      it('should return the created photo', (done) => {
-        const stub = sinon.stub(restler, 'postJson').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
+  describe("listPhotos", () => {
+    it("should return the photos", async () => {
+      const res = await client.listPhotos();
 
-        client.createPhoto({}, (err, result) => {
-          assert.equal(result.id, 1);
-
-          stub.restore();
-
-          done();
-        });
-      });
+      expect(res).to.have.lengthOf.above(0);
     });
+  });
 
-    describe('getPhoto', () => {
-      it('should return the photo', (done) => {
-        const stub = sinon.stub(restler, 'get').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
+  describe("getPhoto", () => {
+    it("should return the photo", async () => {
+      const payload = {
+        name: uuidv4(),
+        enable_crop: false,
+      };
 
-        client.getPhoto({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
+      const profile = await client.createProfile(payload);
 
-          stub.restore();
+      const jobPayload = {
+        name: uuidv4(),
+        profile_id: profile.id,
+      };
 
-          done();
-        });
+      const job = await client.createJob(jobPayload);
+      const photo = await client.createPhoto({
+        name: uuidv4(),
+        job_id: job.id,
       });
+
+      const res = await client.getPhoto(photo.id);
+      expect(res).to.have.property("id").to.equal(photo.id);
     });
+  });
 
-    describe('updatePhoto', () => {
-      it('should return the updated photo', (done) => {
-        const stub = sinon.stub(restler, 'patchJson').returns({
-          once: sinon.stub().yields({ id: 1 }, {}),
-        });
+  describe("deletePhoto", () => {
+    it("should return the deleted photo", async () => {
+      const payload = {
+        name: uuidv4(),
+        enable_crop: false,
+      };
 
-        client.updatePhoto({ id: 1 }, (err, result) => {
-          assert.equal(result.id, 1);
+      const profile = await client.createProfile(payload);
 
-          stub.restore();
+      const jobPayload = {
+        name: uuidv4(),
+        profile_id: profile.id,
+      };
 
-          done();
-        });
+      const job = await client.createJob(jobPayload);
+
+      const photo = await client.createPhoto({
+        name: uuidv4(),
+        job_id: job.id,
       });
-    });
 
-    describe('deletePhoto', () => {
-      it('should return empty object', (done) => {
-        const stub = sinon.stub(restler, 'del').returns({
-          once: sinon.stub().yields({}, { statusCode: 204 }),
-        });
-
-        client.deletePhoto({ id: 1 }, (err, result) => {
-          assert.isEmpty(result);
-
-          stub.restore();
-
-          done();
-        });
-      });
+      const res = await client.deletePhoto(photo.id);
+      expect(res).to.have.property("id").to.equal(photo.id);
     });
   });
 });

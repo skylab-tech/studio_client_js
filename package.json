@@ -1,13 +1,13 @@
 {
   "name": "skylab-studio",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "author": "SkylabTech <info@skylabtech.ai>",
   "description": "studio.skylabtech.ai JavaScript client",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha",
+    "test": "NODE_ENV=test mocha",
     "test:coverage": "NODE_ENV=test nyc --reporter=lcov mocha"
   },
   "license": "Apache-2.0",
@@ -32,16 +32,21 @@
     "retouching"
   ],
   "dependencies": {
+    "crypto": "^1.0.1",
+    "fs": "^0.0.1-security",
+    "fs-extra": "^11.1.1",
     "query-string": "^6.9.0",
-    "restler": "^3.4.0"
+    "sharp": "^0.32.6",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
+    "chai": "^4.3.10",
     "eslint": "^7.25.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "mocha": "^6.2.2",
-    "nyc": "^15.0.0",
-    "sinon": "^8.0.2"
+    "mocha": "^10.2.0"
+  },
+  "mocha": {
+    "timeout": 10000
   }
 }
