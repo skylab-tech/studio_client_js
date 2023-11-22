@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha",
+    "test": "NODE_ENV=test mocha",
     "test:coverage": "NODE_ENV=test nyc --reporter=lcov mocha"
   },
   "license": "Apache-2.0",
