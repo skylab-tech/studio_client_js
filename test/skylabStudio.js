@@ -16,19 +16,9 @@ describe("Skylab Studio API client", () => {
 
   describe("_buildHeaders", () => {
     it("should build the headers", (done) => {
-      const headers = client._buildHeaders("test");
+      const headers = client._buildHeaders();
 
-      assert.equal(Object.keys(headers).length, 2);
-
-      done();
-    });
-  });
-
-  describe("_getOptions", () => {
-    it("should return options", (done) => {
-      const options = client._getOptions();
-
-      assert.isDefined(options.headers);
+      assert.equal(Object.keys(headers).length, 1);
 
       done();
     });
