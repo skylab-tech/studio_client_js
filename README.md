@@ -38,6 +38,13 @@ await api.queueJob(job.id, payload)
 
 // NOTE: Once the job is queued, it will get processed then completed
 // We will send a response to the specified callback_url with the output photo download urls
+
+// After job has been completed, either download manually or download 1 photo:
+await api.downloadPhoto(photoId, 'path/to/output/directory')
+
+// or download all photos for a job:
+
+await api.downloadPhotos(jobId, 'path/to/output/directory')
 ```
 
 ## Jobs
@@ -174,6 +181,26 @@ await api.uploadProfilePhoto(photoPath, profileId);
 `Returns: { photo: { photoObject }, uploadResponse: bucketUploadResponseStatus }`
 
 If upload fails, the photo object is deleted for you. If upload succeeds and you later decide you no longer want to include that image, use delete_photo to remove it.
+
+#### Download Photo
+
+```javascript
+await api.downloadPhoto(photoId, outputDirectoryPath);
+```
+
+Downloads an individual photo to specified output directory. (preferred over manually downloading)
+
+`Returns array of ofjects, [{ status, id }]`
+
+#### Download Photos
+
+```javascript
+await api.downloadPhotos(jobId, outputDirectoryPath);
+```
+
+Downloads all photos for a job to specified output directory. (preferred over manually downloading)
+
+`Returns array of ofjects, [{ status, id }]`
 
 ### Get a Photo
 

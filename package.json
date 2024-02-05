@@ -1,6 +1,6 @@
 {
   "name": "skylab-studio",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "author": "SkylabTech <info@skylabtech.ai>",
   "description": "studio.skylabtech.ai JavaScript client",
   "main": "index.js",
@@ -32,11 +32,15 @@
     "retouching"
   ],
   "dependencies": {
+    "@supercharge/promise-pool": "^3.1.0",
     "crypto": "^1.0.1",
+    "download": "^8.0.0",
+    "exif-reader": "^2.0.0",
+    "file-type": "^18.7.0",
     "fs": "^0.0.1-security",
     "fs-extra": "^11.1.1",
     "query-string": "^6.9.0",
-    "sharp": "^0.32.6",
+    "sharp": "^0.33.2",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
