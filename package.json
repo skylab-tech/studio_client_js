@@ -1,6 +1,6 @@
 {
   "name": "skylab-studio",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "SkylabTech <info@skylabtech.ai>",
   "description": "studio.skylabtech.ai JavaScript client",
   "main": "index.js",
