@@ -37,14 +37,6 @@ describe("Skylab Studio API client", () => {
     });
   });
 
-  describe("listPhotos", () => {
-    it("should return the photos", async () => {
-      const res = await client.listPhotos();
-
-      expect(res).to.have.lengthOf.above(0);
-    });
-  });
-
   describe("getPhoto", () => {
     it("should return the photo", async () => {
       const payload = {

@@ -152,12 +152,6 @@ For all payload options, consult the [API documentation](https://studio-docs.sky
 
 ## Photos
 
-### List all Photos
-
-```javascript
-await api.listPhotos();
-```
-
 #### Upload Job Photo
 
 This function handles validating a photo, creating a photo object and uploading it to your job/profile's s3 bucket. If the bucket upload process fails, it retries 3 times and if failures persist, the photo object is deleted.
@@ -242,7 +236,7 @@ You will most likely find this information in your logs. To enable it, simply pu
 when instantiating the API object.
 
 ```javascript
-const skylabStudio = require("skylabStudio");
+const skylabStudio = require("skylab-studio");
 
 const api = skylabStudio("your-api-key", (debug = true));
 ```
