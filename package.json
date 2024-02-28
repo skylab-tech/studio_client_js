@@ -1,5 +1,5 @@
 {
-  "name": "skylab-studio",
+  "name": "@skylab-tech/skylab-studio",
   "version": "0.0.3",
   "author": "SkylabTech <info@skylabtech.ai>",
   "description": "studio.skylabtech.ai JavaScript client",
